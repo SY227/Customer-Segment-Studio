@@ -1027,36 +1027,38 @@ export function SegmentGuildCanvas({ segments, selectedKey, onSelect, conversati
         });
 
         desiredPositions.forEach(({ entry, x, z, edgePressure, crowding, hesitation = 0, lingerIntent = 0 }) => {
-          let dx = x - entry.lastX;
-          let dz = z - entry.lastZ;
-          let movementMagnitude = Math.hypot(dx, dz);
-          let moving = movementMagnitude > 0.004 + hesitation * 0.004 + lingerIntent * 0.006;
+          const desiredDx = x - entry.lastX;
+          const desiredDz = z - entry.lastZ;
+          const desiredDistance = Math.hypot(desiredDx, desiredDz);
+          const movementThreshold = 0.004 + hesitation * 0.004 + lingerIntent * 0.006;
+          let moving = desiredDistance > movementThreshold;
+
+          const desiredFacing = Math.atan2(desiredDx, desiredDz) + CHARACTER_FORWARD_OFFSET;
 
           if (moving) {
-            const desiredFacing = Math.atan2(dx, dz) + CHARACTER_FORWARD_OFFSET;
-            const facingError = Math.atan2(Math.sin(desiredFacing - entry.group.rotation.y), Math.cos(desiredFacing - entry.group.rotation.y));
-            const forwardCommit = Math.max(0.08, Math.cos(facingError));
-            const moveScale = 0.18 + forwardCommit * 0.82;
-            const appliedX = entry.lastX + dx * moveScale;
-            const appliedZ = entry.lastZ + dz * moveScale;
-            dx = appliedX - entry.lastX;
-            dz = appliedZ - entry.lastZ;
-            movementMagnitude = Math.hypot(dx, dz);
-            moving = movementMagnitude > 0.004 + hesitation * 0.004 + lingerIntent * 0.006;
+            const constrainedTurn = Math.max(edgePressure, crowding);
+            const turnBlend = Math.min(1, delta * entry.turnRate * (constrainedTurn > 0.18 ? 0.96 : 1.42) * (1 - hesitation * 0.1));
+            entry.group.rotation.y = lerpAngle(entry.group.rotation.y, desiredFacing, turnBlend);
           }
 
+          const facingError = moving
+            ? Math.atan2(Math.sin(desiredFacing - entry.group.rotation.y), Math.cos(desiredFacing - entry.group.rotation.y))
+            : 0;
+          const forwardCommit = moving ? Math.max(0, (Math.cos(facingError) - 0.02) / 0.98) : 0;
+          const forwardScale = forwardCommit * forwardCommit;
+          const forwardDistance = desiredDistance * forwardScale;
+          const forwardX = Math.sin(entry.group.rotation.y - CHARACTER_FORWARD_OFFSET);
+          const forwardZ = Math.cos(entry.group.rotation.y - CHARACTER_FORWARD_OFFSET);
+          const applied = clampRoamPosition(entry.lastX + forwardX * forwardDistance, entry.lastZ + forwardZ * forwardDistance);
+          const dx = applied.x - entry.lastX;
+          const dz = applied.z - entry.lastZ;
+          const movementMagnitude = Math.hypot(dx, dz);
+          moving = movementMagnitude > movementThreshold;
           const strideAmount = Math.min(0.52, 0.18 + movementMagnitude * 22 * entry.strideBoost);
 
-          entry.group.position.x = entry.lastX + dx;
-          entry.group.position.z = entry.lastZ + dz;
+          entry.group.position.x = applied.x;
+          entry.group.position.z = applied.z;
           entry.group.position.y = 0;
-
-          if (moving) {
-            const facing = Math.atan2(dx, dz) + CHARACTER_FORWARD_OFFSET;
-            const constrainedTurn = Math.max(edgePressure, crowding);
-            const turnBlend = Math.min(1, delta * entry.turnRate * (constrainedTurn > 0.18 ? 0.82 : 1.18) * (1 - hesitation * 0.14));
-            entry.group.rotation.y = lerpAngle(entry.group.rotation.y, facing, turnBlend);
-          }
 
           entry.lastX = entry.group.position.x;
           entry.lastZ = entry.group.position.z;
