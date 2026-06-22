@@ -871,7 +871,7 @@ img {
 
 .segment-stat-card span,
 .segment-card-next-label {
-  color: var(--muted);
+  color: var(--accent);
   font-size: 0.73rem;
   font-weight: 600;
 }
