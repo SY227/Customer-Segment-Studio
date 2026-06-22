@@ -3,7 +3,6 @@
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 
-import { SegmentCardAvatar } from "@/components/SegmentCardAvatar";
 import {
   DEFAULT_SEGMENT_KEY,
   SEGMENT_GUILD_DATA,
@@ -36,6 +35,14 @@ const SegmentGuildCanvas = dynamic(
         <div className="guild-canvas-viewport" />
       </div>
     ),
+  },
+);
+
+const SegmentCardAvatar = dynamic(
+  () => import("@/components/SegmentCardAvatar").then((module) => module.SegmentCardAvatar),
+  {
+    ssr: false,
+    loading: () => <div className="segment-card-avatar-shell" aria-hidden="true" />,
   },
 );
 

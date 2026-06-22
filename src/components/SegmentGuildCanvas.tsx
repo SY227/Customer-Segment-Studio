@@ -671,16 +671,16 @@ export function SegmentGuildCanvas({ segments, selectedKey, onSelect, conversati
               pathPhaseA: motionSeed * 1.3,
               pathPhaseB: motionSeed * 1.9 + 0.7,
               pathPhaseC: motionSeed * 2.4 + 1.1,
-              pathRotation: Math.sin(motionSeed * 1.08) * 0.42,
-              crossDrift: 0.2 + ((Math.sin(motionSeed * 1.2) + 1) / 2) * 0.2,
-              sideBias: Math.sin(motionSeed * 0.7) * 0.28,
-              depthBias: Math.cos(motionSeed * 0.9) * 0.16,
-              roamPulse: 0.09 + ((Math.cos(motionSeed * 1.5) + 1) / 2) * 0.07,
+              pathRotation: Math.sin(motionSeed * 1.08) * 0.3,
+              crossDrift: 0.14 + ((Math.sin(motionSeed * 1.2) + 1) / 2) * 0.14,
+              sideBias: Math.sin(motionSeed * 0.7) * 0.24,
+              depthBias: Math.cos(motionSeed * 0.9) * 0.12,
+              roamPulse: 0.08 + ((Math.cos(motionSeed * 1.5) + 1) / 2) * 0.05,
               personalSpace: 0.92 + segment.characterHeight * 0.22,
               lingerPhase: motionSeed * 1.6 + 0.9,
-              lingerRate: 0.22 + ((Math.sin(motionSeed * 0.8) + 1) / 2) * 0.16,
-              lingerStrength: 0.36 + ((Math.cos(motionSeed * 1.1) + 1) / 2) * 0.26,
-              arcDrift: 0.08 + ((Math.sin(motionSeed * 1.4) + 1) / 2) * 0.1,
+              lingerRate: 0.18 + ((Math.sin(motionSeed * 0.8) + 1) / 2) * 0.12,
+              lingerStrength: 0.3 + ((Math.cos(motionSeed * 1.1) + 1) / 2) * 0.18,
+              arcDrift: 0.05 + ((Math.sin(motionSeed * 1.4) + 1) / 2) * 0.06,
               lastX: baseX,
               lastZ: baseZ,
               lastMoveX: 0,
@@ -908,7 +908,7 @@ export function SegmentGuildCanvas({ segments, selectedKey, onSelect, conversati
           const localZ =
             Math.cos(travel * (0.66 + entry.roamPulse * 0.16) + entry.pathPhaseB) * entry.amplitudeZ * roamScale +
             Math.sin(travel * (0.31 + entry.crossDrift * 0.1) + entry.pathPhaseC) * entry.amplitudeZ * (0.18 + entry.roamPulse * 0.26);
-          const dynamicRotation = entry.pathRotation + Math.sin(elapsed * (0.12 + entry.arcDrift * 0.24) + entry.pathPhaseB) * entry.arcDrift;
+          const dynamicRotation = entry.pathRotation + Math.sin(elapsed * (0.1 + entry.arcDrift * 0.18) + entry.pathPhaseB) * entry.arcDrift;
           const rotatedX = localX * Math.cos(dynamicRotation) - localZ * Math.sin(dynamicRotation);
           const rotatedZ = localX * Math.sin(dynamicRotation) + localZ * Math.cos(dynamicRotation);
           const rawX =
@@ -1052,7 +1052,7 @@ export function SegmentGuildCanvas({ segments, selectedKey, onSelect, conversati
           if (moving) {
             const facing = Math.atan2(dx, dz) + CHARACTER_FORWARD_OFFSET;
             const constrainedTurn = Math.max(edgePressure, crowding);
-            const turnBlend = Math.min(1, delta * entry.turnRate * (constrainedTurn > 0.18 ? 0.88 : 1.32) * (1 - hesitation * 0.14));
+            const turnBlend = Math.min(1, delta * entry.turnRate * (constrainedTurn > 0.18 ? 0.82 : 1.18) * (1 - hesitation * 0.14));
             entry.group.rotation.y = lerpAngle(entry.group.rotation.y, facing, turnBlend);
           }
 
@@ -1069,12 +1069,12 @@ export function SegmentGuildCanvas({ segments, selectedKey, onSelect, conversati
           entry.actor.position.y = Math.sin(elapsed * entry.bobSpeed + entry.phase) * entry.bobAmount + gaitLift + (moving ? 0.015 : 0.004);
           entry.actor.position.z = forwardLean;
           entry.actor.rotation.x = moving
-            ? 0.034 + Math.sin(elapsed * entry.bobSpeed * 2.05 + entry.phase) * 0.021
-            : 0.008 + Math.sin(elapsed * 1.5 + entry.phase) * 0.013;
-          entry.actor.rotation.y = Math.sin(elapsed * entry.bobSpeed * 0.72 + entry.phase) * (moving ? 0.01 : 0.008);
+            ? 0.03 + Math.sin(elapsed * entry.bobSpeed * 2.0 + entry.phase) * 0.017
+            : 0.008 + Math.sin(elapsed * 1.5 + entry.phase) * 0.011;
+          entry.actor.rotation.y = Math.sin(elapsed * entry.bobSpeed * 0.72 + entry.phase) * (moving ? 0.007 : 0.006);
           entry.actor.rotation.z = moving
-            ? Math.sin(elapsed * entry.bobSpeed * 2.5 + entry.phase) * 0.03
-            : Math.sin(elapsed * 1.2 + entry.phase) * 0.011;
+            ? Math.sin(elapsed * entry.bobSpeed * 2.2 + entry.phase) * 0.018
+            : Math.sin(elapsed * 1.2 + entry.phase) * 0.008;
 
           if (entry.mixer) {
             if (entry.walkAction && entry.idleAction) {
