@@ -4,7 +4,6 @@ import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 
 import { SegmentCardAvatar } from "@/components/SegmentCardAvatar";
-import { SegmentGuildCanvas } from "@/components/SegmentGuildCanvas";
 import {
   DEFAULT_SEGMENT_KEY,
   SEGMENT_GUILD_DATA,
@@ -26,6 +25,18 @@ const percentFormatter = new Intl.NumberFormat("en-US", {
 const HeaderActionsClient = dynamic(
   () => import("@/components/HeaderActionsClient").then((module) => module.HeaderActionsClient),
   { ssr: false, loading: () => <div className="header-actions" aria-hidden="true" /> },
+);
+
+const SegmentGuildCanvas = dynamic(
+  () => import("@/components/SegmentGuildCanvas").then((module) => module.SegmentGuildCanvas),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="guild-canvas-shell" aria-hidden="true">
+        <div className="guild-canvas-viewport" />
+      </div>
+    ),
+  },
 );
 
 const objectiveTone: Record<string, string> = {
