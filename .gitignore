@@ -1,0 +1,10 @@
+node_modules
+.next
+.DS_Store
+_archive
+.env.local
+.env
+Segmentation_all_files*.txt
+*_all_files*.txt
+.vercel
+.env*
