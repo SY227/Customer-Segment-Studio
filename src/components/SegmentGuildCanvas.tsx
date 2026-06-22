@@ -91,6 +91,8 @@ function getCanvasMotionProfile(segment: SegmentGuildRecord) {
       return { bobSpeed: 2.06, bobAmount: 0.033, turnRate: 7.5, strideBoost: 1.07, lateralSway: 0.018 };
     case "Occasional Buyers":
       return { bobSpeed: 1.98, bobAmount: 0.032, turnRate: 7.1, strideBoost: 1.05, lateralSway: 0.017 };
+    case "Light Repeaters":
+      return { bobSpeed: 1.82, bobAmount: 0.028, turnRate: 8.6, strideBoost: 1, lateralSway: 0.006 };
     case "Dormant VIPs":
       return { bobSpeed: 1.58, bobAmount: 0.025, turnRate: 5.9, strideBoost: 0.92, lateralSway: 0.011 };
     case "Inactive Customers":
