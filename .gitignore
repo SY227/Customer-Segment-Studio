@@ -1,0 +1,15 @@
+node_modules
+.next
+.DS_Store
+_archive
+.env.local
+.env
+.env*
+.vercel
+Segmentation_all_files*.txt
+*_all_files*.txt
+KayKit_Adventurers_2.0_EXTRA/
+KayKit_Adventurers_2.0_FREE/
+KayKit_Bits_Bundle1_1.1/
+Low_Poly_Dungeon_Asset_Pack_v1.3/
+!.env.example
