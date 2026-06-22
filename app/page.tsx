@@ -212,7 +212,7 @@ export default function HomePage() {
           <aside className="detail-panel panel">
             <div className="panel-topline detail-topline">
               <div>
-                <p className="mini-label">Selected customer group</p>
+                <p className="mini-label">Customer group</p>
                 <h2>{selectedSegment.label}</h2>
               </div>
               <div className="detail-topline-actions">
